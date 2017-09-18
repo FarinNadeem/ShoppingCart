@@ -1,0 +1,287 @@
+﻿<!doctype html>
+<html lang="en" class="no-js">
+<head>
+    <title></title>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+
+	<link href='http://fonts.googleapis.com/css?family=Work+Sans:400,600,700' rel='stylesheet' type='text/css'>
+	<link rel="stylesheet" href="css/reset.css"> <!-- CSS reset -->
+	<link rel="stylesheet" href="css/style.css"> <!-- Resource style -->
+    <link rel="stylesheet" href="Content/bootstrap.min.css" />
+	
+ <style>
+         
+        .table > tbody > tr > td, .table > tfoot > tr > td {
+            vertical-align: middle;
+        }
+
+        @media screen and (max-width: 600px) {
+            table#cart tbody td .form-control {
+                width: 20%;
+                display: inline !important;
+            }
+
+            .actions .btn {
+                width: 36%;
+                margin: 1.5em 0;
+            }
+
+            .actions .btn-info {
+                float: left;
+            }
+
+            .actions .btn-danger {
+                float: right;
+            }
+
+            table#cart thead {
+                display: none;
+            }
+
+            table#cart tbody td {
+                display: block;
+                padding: .6rem;
+                min-width: 320px;
+            }
+
+            table#cart tbody tr td:first-child {
+                background: #333;
+                color: #fff;
+            }
+
+            table#cart tbody td:before {
+                content: attr(data-th);
+                font-weight: bold;
+                display: inline-block;
+                width: 8rem;
+            }
+
+
+
+            table#cart tfoot td {
+                display: block;
+            }
+
+                table#cart tfoot td .btn {
+                    display: block;
+                }
+        }
+    </style>
+   
+
+
+
+</head>
+<body onload="GetProducts()">
+    
+    <nav class="navbar navbar-inverse">
+        <div class="container-fluid">
+            <div class="navbar-header">
+                <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1">
+                    <span class="sr-only">Toggle navigation</span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                </button>
+                <a class="navbar-brand" href="#">Cart</a>
+            </div>
+
+            <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+                <ul class="nav navbar-nav">
+                    <li class="active"><a href="#">Home <span class="sr-only">(current)</span></a></li>
+                </ul>
+
+                <ul class="nav navbar-nav navbar-right">
+                    <li id="topcartlink">
+                        <a href="#" onclick="GetCart()" class="ico-cart">
+                            <span class="cart-label">Cart</span>
+                            <span id="proCount">0</span>
+                        </a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+   
+
+
+    <!-- /.col-lg-3 -->
+    <div class="container">
+        <!-- Cart Modal -->
+        <div class="modal fade" id="myModel" role="dialog">
+            <div class="modal-dialog">
+
+                <!-- Modal content-->
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal">&times;</button>
+                        <h4 class="modal-title">Cart</h4>
+                    </div>
+                    <div class="modal-body">
+                        <table class="table table-hover table-condensed">
+                            <thead>
+                                <tr>
+                                    <th style="width:100%">Product</th>
+                                    <th style="width:10%">Price</th>
+                                    <th style="width:8%">Quantity</th>
+                                    <th style="width:22%" class="text-center">Subtotal</th>
+                                    <th style="width:10%"></th>
+                                </tr>
+                            </thead>
+                            <tbody id="cartbody"></tbody>
+                            <tfoot>
+                                <tr class="visible-xs">
+                                    <td class="text-center"><strong>Total 1.99</strong></td>
+                                </tr>
+                                <tr>
+                                    <td><a href="#" class="btn btn-warning"><i class="fa fa-angle-left"></i> Continue Shopping</a></td>
+                                    <td colspan="2" class="hidden-xs"></td>
+                                    <td class="hidden-xs text-center"><strong id="grandTotal">Total $1.99</strong></td>
+                                    <td><a href="Checkout.html" class="btn btn-success btn-block">Checkout <i class="fa fa-angle-right"></i></a></td>
+                                </tr>
+                            </tfoot>
+                        </table>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" id="click" class="btn btn-default" data-dismiss="modal">Close</button>
+                    </div>
+                </div>
+                </div>
+            </div>
+        </div>
+   
+    
+
+        <div id="mainbody" class="container">
+        </div>
+       
+    <script src="js/modernizr.js"></script> <!-- Modernizr -->
+    <script src="Scripts/jquery-3.2.1.min.js"></script>
+    <script src="js/jquery-1.11.1.min.js"></script>
+    <script src="Scripts/bootstrap.min.js"></script>
+    <script type="text/html" id="carttr">
+        <tr>
+            <td data-th="Product">
+                <div class="row">
+                    <div class="col-sm-2 hidden-xs"><img src="Images/{{Image}}" alt="..." class="img-responsive" /></div>
+                    <div class="col-sm-10">
+                        <h4 class="nomargin">{{Name}}</h4>
+                    </div>
+                </div>
+            </td>
+            <td data-th="Price">{{Price}}</td>
+            <td data-th="Quantity">
+                <label class="form-control text-center">{{Qty}}</label>
+            </td>
+            <td data-th="Subtotal" class="text-center">{{subTotal}}</td>
+            <td class="actions" data-th="">
+                <button class="btn btn-danger btn-sm"><i class="fa fa-trash-o"></i></button>
+            </td>
+        </tr>
+    </script>
+        
+        <script type="text/html" id="producttr"><ul class="cd-gallery">
+                <li>
+                    <div class="cd-single-item">
+                        <a href="#0">
+                            <ul class="cd-slider-wrapper">
+                                <li class="selected"><img src="img/{{Image}}" alt="Preview image"></li>
+                            </ul>
+                        </a>
+                        <div class="cd-customization">
+                            <input type="submit" name="submit" value="Add to cart" onclick="AddToCart({{Id}})" class="add-to-cart" />
+
+                        </div>
+                    </div>
+                    <div class="cd-item-info">
+                        <b><a href="#0">{{Name}}</a></b>
+                        <em>${{Price}}</em>
+                    </div>
+                </li>
+            </ul> 
+        </script>
+
+
+        <script>
+    function GetProducts() {
+        var xhr = new XMLHttpRequest();
+        xhr.open('Get', 'api/GetProducts');
+
+        xhr.onload = function () {
+            if (xhr.response && xhr.response != '') {
+                var products = JSON.parse(xhr.response);
+
+                var mainbody = document.getElementById('mainbody');
+
+                mainbody.innerHTML = '';
+                var htmlcode = '';
+
+                for (var i = 0; i < products.length; i++) {
+                    var producttr = document.getElementById('producttr').innerHTML;
+                    producttr = producttr.replace('{{Name}}', products[i].Name);
+                    producttr = producttr.replace('{{Price}}', products[i].Price);
+                    producttr = producttr.replace('{{Image}}', products[i].Imageurl);
+                    producttr = producttr.replace('{{Id}}', products[i].Id);
+                    mainbody.innerHTML += producttr;
+                }
+            }
+        };
+
+        xhr.send(null);
+
+    }
+
+    function AddToCart(pid) {
+
+        var xhr = new XMLHttpRequest();
+        xhr.open('Get', 'api/AddToCart/' + pid);
+
+        xhr.onload = function () {
+            if (xhr.response && xhr.response != '') {
+                var count = document.getElementById("proCount").innerHTML;
+                count++;
+                document.getElementById("proCount").innerHTML = count;
+                
+
+            }
+        };
+
+        xhr.send(null);
+    }
+    function GetCart() {
+        $('#myModel').modal("show");
+        var xhr = new XMLHttpRequest();
+        xhr.open('Get', 'api/GetCart');
+        xhr.onload = function () {
+            if (xhr.response && xhr.response != '') {
+                var products = JSON.parse(xhr.response);
+                console.log(products);
+                var cartbody = document.getElementById('cartbody');
+                
+                var grandTotal = 0;
+                for (var i = 0; i < products.Items.length; i++) {
+                    var item = products.Items[i].Product;
+                    var qty = products.Items[i].Count;
+                    var carttr = document.getElementById('carttr').innerHTML;
+                    var item = products.Items[i].Product;
+                    var subTotal = qty * item.Price;
+                    grandTotal += subTotal;
+                    carttr = carttr.replace('{{Name}}', item.Name);
+                    carttr = carttr.replace('{{Qty}}', qty);
+                    carttr = carttr.replace('{{Price}}', item.Price);
+                    carttr = carttr.replace('{{subTotal}}', subTotal);
+                    carttr = carttr.replace('{{Image}}', item.Imageurl);
+                    carttr = carttr.replace('{{Id}}', item.Id);
+
+
+                    cartbody.innerHTML += carttr;
+                }
+                document.getElementById("grandTotal").innerHTML = grandTotal;
+            }
+        };
+        xhr.send(null);
+    }
+        </script>
+</body>
+</html> 
