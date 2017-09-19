@@ -34,7 +34,7 @@ namespace ShoppingCart.Controllers
 
         [HttpGet]
         [Route("api/AddToCart/{Id}")]
-        public void AddToCart(int Id)
+        public int AddToCart(int Id)
         {
              Cart sc = null;
 
@@ -63,6 +63,7 @@ namespace ShoppingCart.Controllers
                 sc.Items.Add(item);
 
             HttpContext.Current.Session["sc"] = sc;
+            return item.Count;
             
         }
 
